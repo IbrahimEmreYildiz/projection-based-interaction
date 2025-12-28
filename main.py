@@ -240,7 +240,7 @@ while True:
     if not success: break
 
     # Kamerayı Ayna Moduna al (Kullanım kolaylığı için)
-    #img = cv2.flip(img, 1)
+   # img = cv2.flip(img, 1) ayna görüntüsü diye kalibrasyon sağ sol ters oluyor
     global_frame_counter += 1
 
     # --- DURUM 0: KALİBRASYON ---
