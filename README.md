@@ -35,3 +35,59 @@ Projenin çalışması için Python yüklü olmalıdır. Gerekli kütüphaneleri
 
 ```bash
 pip install opencv-python mediapipe numpy
+
+
+📂 Dosya Yapısı
+Projenin hatasız çalışması için klasör düzeni aşağıdaki gibi olmalıdır:
+
+Plaintext
+
+Project_Root/
+│
+├── main.py                # Ana proje kodu
+├── README.md              # Proje dokümantasyonu
+└── 3d_frames/             # Oyun Varlıkları (Assets)
+    ├── flags/             # Bayrak animasyon kareleri (0.png, 1.png...)
+    └── animals/           # Hayvan resimleri (bear.png, elephant.png...)
+🎮 Nasıl Oynanır?
+1. Donanım Kurulumu
+Bilgisayar ekranını bir duvara yansıtın veya laptop ekranını kullanın.
+
+Harici bir kamerayı (veya Iriun Webcam yüklü telefonu), ekranı tamamen görecek şekilde karşısına yerleştirin.
+
+Önemli: Kamera ekranı görmeli, eliniz ise kamera ile ekran arasına girmelidir.
+
+2. Kalibrasyon (Kritik Adım)
+Oyun başladığında kamera görüntüsü üzerinde ekranın 4 köşesini şu sırayla tıklayın:
+
+Sol Üst
+
+Sağ Üst
+
+Sağ Alt
+
+Sol Alt
+
+(Not: Sıralama saat yönündedir. Yanlış yapılırsa oyun ters çalışır.)
+
+3. Oyun Modları
+Kalibrasyon bittiğinde Menü Ekranı açılır:
+
+🇹🇷 Bayraklar Modu: Havada asılı duran "BAYRAKLAR" butonuna elinizle dokunun. Küplerin içinde dalgalanan ülke bayraklarını yakalayın.
+
+🐘 Hayvanlar Modu: "HAYVANLAR" butonuna dokunun. Küplerin içindeki hayvanları yakalayın.
+
+Not: Menüye dönmek için klavyeden M tuşuna, çıkmak için Q tuşuna basabilirsiniz.
+
+🧠 Teknik Detaylar (Algoritma)
+Proje, Koordinat Eşleme (Coordinate Mapping) prensibine dayanır:
+
+Görüntü İşleme: Kamera görüntüsü alınır ve kullanıcı deneyimi için aynalanır (Mirroring).
+
+Matris Hesaplama: Seçilen 4 nokta ile cv2.getPerspectiveTransform kullanılarak bir dönüşüm matrisi oluşturulur.
+
+Konum Tespiti: MediaPipe ile parmak ucunun (X, Y) koordinatları tespit edilir.
+
+Warping (Dönüşüm): cv2.perspectiveTransform fonksiyonu ile kameradaki parmak konumu, oyun ekranındaki (sanal dünyadaki) piksel karşılığına çevrilir.
+
+Etkileşim: Dönüştürülmüş parmak koordinatları ile sanal objelerin koordinatları çakışırsa (Collision Detection), etkileşim gerçekleşir.
