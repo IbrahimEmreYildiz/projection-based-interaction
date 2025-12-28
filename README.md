@@ -8,7 +8,7 @@
 
 | 👤 Geliştirici | 🎓 Öğrenci Numarası | 📚 Ders Adı |
 | :---: | :---: | :---: |
-| **İbrahim Emre Yıldız** | **[2020555069]** | **[Mixed-Reality]** |
+| **İbrahim Emre Yıldız** | **2020555069** | **Mixed-Reality** |
 
 </div>
 
@@ -29,18 +29,6 @@ Kullanıcı, fiziksel bir yüzeye (ekran veya duvar) yansıtılan sanal nesneler
     * **Statik Obje Desteği:** Sabit resimleri (hayvanlar vb.) 3D küplerin içine doku olarak giydirme.
 * **🎛️ İnteraktif Menü Sistemi:** El hareketleriyle kontrol edilen, "Bayrak Modu" ve "Hayvan Modu" arasında geçiş sağlayan sanal arayüz.
 
-## 🛠️ Kurulum ve Gereksinimler
-
-Projenin çalışması için Python yüklü olmalıdır. Gerekli kütüphaneleri aşağıdaki komutla yükleyebilirsiniz:
-
-```bash
-pip install opencv-python mediapipe numpy
-
-
-📂 Dosya Yapısı
-Projenin hatasız çalışması için klasör düzeni aşağıdaki gibi olmalıdır:
-
-Plaintext
 
 Project_Root/
 │
@@ -49,45 +37,46 @@ Project_Root/
 └── 3d_frames/             # Oyun Varlıkları (Assets)
     ├── flags/             # Bayrak animasyon kareleri (0.png, 1.png...)
     └── animals/           # Hayvan resimleri (bear.png, elephant.png...)
-🎮 Nasıl Oynanır?
-1. Donanım Kurulumu
-Bilgisayar ekranını bir duvara yansıtın veya laptop ekranını kullanın.
 
-Harici bir kamerayı (veya Iriun Webcam yüklü telefonu), ekranı tamamen görecek şekilde karşısına yerleştirin.
 
-Önemli: Kamera ekranı görmeli, eliniz ise kamera ile ekran arasına girmelidir.
 
-2. Kalibrasyon (Kritik Adım)
-Oyun başladığında kamera görüntüsü üzerinde ekranın 4 köşesini şu sırayla tıklayın:
+## 🎮 Nasıl Oynanır?
 
-Sol Üst
+### 1. Donanım Kurulumu
+* Bilgisayar ekranını bir duvara yansıtın veya laptop ekranını kullanın.
+* Harici bir kamerayı (veya Iriun Webcam yüklü telefonu), ekranı tamamen görecek şekilde karşısına yerleştirin.
+* **Önemli:** Kamera ekranı görmeli, eliniz ise kamera ile ekran arasına girmelidir.
 
-Sağ Üst
+### 2. Kalibrasyon (Kritik Adım)
+Oyun başladığında kamera görüntüsü üzerinde ekranın **4 köşesini** şu sırayla tıklayın:
+1.  **Sol Üst**
+2.  **Sağ Üst**
+3.  **Sağ Alt**
+4.  **Sol Alt**
 
-Sağ Alt
+*(Not: Sıralama saat yönündedir. Yanlış yapılırsa oyun ters çalışır.)*
 
-Sol Alt
-
-(Not: Sıralama saat yönündedir. Yanlış yapılırsa oyun ters çalışır.)
-
-3. Oyun Modları
+### 3. Oyun Modları
 Kalibrasyon bittiğinde Menü Ekranı açılır:
+* **🇹🇷 Bayraklar Modu:** Havada asılı duran "BAYRAKLAR" butonuna elinizle dokunun. Küplerin içinde dalgalanan ülke bayraklarını yakalayın.
+* **🐘 Hayvanlar Modu:** "HAYVANLAR" butonuna dokunun. Küplerin içindeki hayvanları yakalayın.
 
-🇹🇷 Bayraklar Modu: Havada asılı duran "BAYRAKLAR" butonuna elinizle dokunun. Küplerin içinde dalgalanan ülke bayraklarını yakalayın.
+*Not: Menüye dönmek için klavyeden `M` tuşuna, çıkmak için `Q` tuşuna basabilirsiniz.*
 
-🐘 Hayvanlar Modu: "HAYVANLAR" butonuna dokunun. Küplerin içindeki hayvanları yakalayın.
+## 🧠 Teknik Detaylar (Algoritma)
 
-Not: Menüye dönmek için klavyeden M tuşuna, çıkmak için Q tuşuna basabilirsiniz.
+Proje, **Koordinat Eşleme (Coordinate Mapping)** prensibine dayanır:
 
-🧠 Teknik Detaylar (Algoritma)
-Proje, Koordinat Eşleme (Coordinate Mapping) prensibine dayanır:
+1.  **Görüntü İşleme:** Kamera görüntüsü alınır ve kullanıcı deneyimi için aynalanır (Mirroring).
+2.  **Matris Hesaplama:** Seçilen 4 nokta ile `cv2.getPerspectiveTransform` kullanılarak bir dönüşüm matrisi oluşturulur.
+3.  **Konum Tespiti:** MediaPipe ile parmak ucunun (X, Y) koordinatları tespit edilir.
+4.  **Warping (Dönüşüm):** `cv2.perspectiveTransform` fonksiyonu ile kameradaki parmak konumu, oyun ekranındaki (sanal dünyadaki) piksel karşılığına çevrilir.
+5.  **Etkileşim:** Dönüştürülmüş parmak koordinatları ile sanal objelerin koordinatları çakışırsa (Collision Detection), etkileşim gerçekleşir.
 
-Görüntü İşleme: Kamera görüntüsü alınır ve kullanıcı deneyimi için aynalanır (Mirroring).
 
-Matris Hesaplama: Seçilen 4 nokta ile cv2.getPerspectiveTransform kullanılarak bir dönüşüm matrisi oluşturulur.
+## 🛠️ Kurulum ve Gereksinimler
 
-Konum Tespiti: MediaPipe ile parmak ucunun (X, Y) koordinatları tespit edilir.
+Projenin çalışması için Python yüklü olmalıdır. Gerekli kütüphaneleri aşağıdaki komutla yükleyebilirsiniz:
 
-Warping (Dönüşüm): cv2.perspectiveTransform fonksiyonu ile kameradaki parmak konumu, oyun ekranındaki (sanal dünyadaki) piksel karşılığına çevrilir.
-
-Etkileşim: Dönüştürülmüş parmak koordinatları ile sanal objelerin koordinatları çakışırsa (Collision Detection), etkileşim gerçekleşir.
+```bash
+pip install opencv-python mediapipe numpy
